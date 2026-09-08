@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgres:16-alpine          # image officielle PostgreSQL 16 (variante légère "alpine")
+    container_name: jarvis-agent-db
+    environment:                        # variables lues par PostgreSQL au démarrage
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"                     # publie le port  ->  machine:conteneur
+    volumes:
+      - postgres_data:/var/lib/postgresql/data        # les données persistent dans ce volume
+      - ./db/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    healthcheck:                        # permet à Docker de savoir quand la base est prête
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  postgres_data:
