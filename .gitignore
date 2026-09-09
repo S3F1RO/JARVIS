@@ -10,3 +10,6 @@ wheels/
 .venv
 .env
 .dockerignore
+
+# File to remember some commands
+utils.md

@@ -1,26 +1,16 @@
-import psycopg
-from typing import Any
-from dotenv import load_dotenv
-from config import POSTGRES_CONFIG
-
-def get_connection():
-    return psycopg.connect(**POSTGRES_CONFIG)
+from tools.exercise_generator import generate_exercise
+import json
 
 def main():
-    try:
-        with get_connection() as connection:
-            print("Successfully connected to PostgreSQL!")
-
-    except Exception as error:
-        print("Database connection failed:")
-        print(error)
-
+    exercise = generate_exercise()
+    print("Question: " + exercise['question'])
+    print("Answer: " + exercise['expected_answer'])
+    print("Difficulty: " + str(exercise['difficulty']))
+    print('Exercise: ')
+    print(json.dumps(exercise,indent=4))
 
 if __name__ == "__main__":
     main()
-
-
-
 
 
 
